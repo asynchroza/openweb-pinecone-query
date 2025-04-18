@@ -60,7 +60,7 @@ class Tools:
                     {
                         "type": "message",
                         "data": {
-                            "content": f"Found a match '{file_name}' with score of {score}\n"
+                            "content": f"- Found a match `{file_name}` with score of **{score}**\n"
                         },
                     }
                 )
@@ -72,5 +72,13 @@ class Tools:
 
 if __name__ == "__main__":
     tools = Tools()
-    print(tools.search("How to add item to python list"))
+    from dotenv import load_dotenv
+    from os import getenv
+    import asyncio
+    load_dotenv()
+
+    tools.valves.pinecone_api_key = getenv("PINECONE_API_KEY")
+    tools.valves.pinecone_index = getenv("PINECONE_INDEX")
+
+    print(asyncio.run(tools.search("How to add a participant to a team")))
 
