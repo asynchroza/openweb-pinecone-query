@@ -67,7 +67,23 @@ class Tools:
 
             formatted.append(f"Filename: {file_name} -- Code: {code}")
 
-        return "\n\n---\n\n".join(formatted)
+        return _get_prompt(query, formatted)
+
+
+PROOMPT = """
+Your task is to analyze the documents returned by the knowledgebase, which were matched to the user's embedded query. 
+Carefully analyze these files and use both your general knowledge and the specific information 
+from the provided files to answer the user's original question. 
+In your response, clearly indicate which parts of your answer are 
+based on information from the files by referencing the relevant sections 
+or excerpts. Be explicit about how the information from the files supports your answer.
+"""
+
+
+def _get_prompt(user_query: str, files: list[str]):
+    return (
+        f"{PROOMPT}\nUSER QUERY: {user_query}\nRETRIEVED FILES: {'\n---\n'.join(files)}"
+    )
 
 
 if __name__ == "__main__":
@@ -75,6 +91,7 @@ if __name__ == "__main__":
     from dotenv import load_dotenv
     from os import getenv
     import asyncio
+
     load_dotenv()
 
     tools.valves.pinecone_api_key = getenv("PINECONE_API_KEY")
